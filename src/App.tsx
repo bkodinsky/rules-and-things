@@ -14,7 +14,17 @@ function App() {
   }, []);
 
   function createTodo() {
-    client.models.Todo.create({ content: window.prompt("Todo content") });
+    client.models.Todo.create({
+      content: window.prompt("Todo content"),
+      isDone: false,
+    });
+  }
+
+  function toggleTodoStatus(id: string, currentStatus: boolean) {
+    client.models.Todo.update({
+      id,
+      isDone: !currentStatus,
+    });
   }
 
   return (
@@ -23,7 +33,14 @@ function App() {
       <button onClick={createTodo}>+ new</button>
       <ul>
         {todos.map((todo) => (
-          <li key={todo.id}>{todo.content}</li>
+          <li key={todo.id}>
+            <span style={{ textDecoration: todo.isDone ? 'line-through' : 'none' }}>
+              {todo.content}
+            </span>
+            <button onClick={() => toggleTodoStatus(todo.id, todo.isDone)}>
+              {todo.isDone ? 'Undo' : 'Complete'}
+            </button>
+          </li>
         ))}
       </ul>
       <div>
