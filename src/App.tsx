@@ -37,7 +37,7 @@ function App() {
             <span style={{ textDecoration: todo.isDone ? 'line-through' : 'none' }}>
               {todo.content}
             </span>
-            <button onClick={() => toggleTodoStatus(todo.id, todo.isDone)}>
+            <button onClick={() => toggleTodoStatus(todo.id, todo.isDone ?? false)}>
               {todo.isDone ? 'Undo' : 'Complete'}
             </button>
           </li>
