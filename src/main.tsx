@@ -1,3 +1,5 @@
+import '@aws-amplify/ui-react/styles.css';
+import { ThemeProvider } from '@aws-amplify/ui-react';
 import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App.tsx";
@@ -11,7 +13,9 @@ Amplify.configure(outputs);
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <Authenticator>
-      <App />
+      <ThemeProvider>
+        <App />
+      </ThemeProvider>
     </Authenticator>
   </React.StrictMode>
 );
