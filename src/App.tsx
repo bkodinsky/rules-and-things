@@ -20,6 +20,11 @@ function App() {
     });
   }
 
+  
+  function deleteTodo(id: string) {
+    client.models.Todo.delete({ id })
+  }
+
   function toggleTodoStatus(id: string, currentStatus: boolean) {
     client.models.Todo.update({
       id,
@@ -40,6 +45,9 @@ function App() {
             <button onClick={() => toggleTodoStatus(todo.id, todo.isDone ?? false)}>
               {todo.isDone ? 'Undo' : 'Complete'}
             </button>
+            <button onClick={() => deleteTodo(todo.id)}>
+              {'Delete'}
+            </button>            
           </li>
         ))}
       </ul>
