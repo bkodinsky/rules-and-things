@@ -19,6 +19,7 @@ export const generateHaikuFunction = defineFunction({
   environment: {
     MODEL_ID,
   },
+  timeoutSeconds: 15
 });
 
 const schema = a.schema({
