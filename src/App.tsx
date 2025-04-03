@@ -20,6 +20,8 @@ function App() {
 
     const { data, errors } = await client.queries.generateHaiku({
       prompt
+    }, {
+      authMode: 'apiKey'
     });
 
     if (!errors) {
