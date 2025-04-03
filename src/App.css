@@ -40,3 +40,61 @@
 .read-the-docs {
   color: #888;
 }
+
+.app-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 1rem;
+}
+
+.todo-card {
+  width: 100%;
+  max-width: 600px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  padding: 1.5rem;
+}
+
+.new-todo-input {
+  flex: 1;
+}
+
+.todo-list {
+  margin-top: 1rem;
+  max-height: 60vh;
+  overflow-y: auto;
+}
+
+.todo-item {
+  border-radius: 8px;
+  transition: all 0.2s ease;
+  border: 1px solid #f0f0f0;
+  margin-bottom: 0.5rem;
+}
+
+.todo-item:hover {
+  background-color: #f9f9f9;
+}
+
+.completed {
+  background-color: #f9f9f9;
+  border-left: 4px solid #5e60ce;
+}
+
+.completed-text {
+  color: #888;
+  text-decoration: line-through;
+}
+
+.delete-button {
+  margin-left: auto;
+  opacity: 0.6;
+  transition: opacity 0.2s ease;
+}
+
+.delete-button:hover {
+  opacity: 1;
+}
