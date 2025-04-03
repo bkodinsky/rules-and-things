@@ -16,29 +16,27 @@ export const handler: Schema["generateHaiku"]["functionHandler"] = async (
   const prompt = event.arguments.prompt;
 
   // Invoke model
-  const input = {
+  const input: InvokeModelCommandInput = {
     modelId: process.env.MODEL_ID,
     contentType: "application/json",
     accept: "application/json",
     body: JSON.stringify({
-      messages: [
+      "inferenceConfig": {
+        "max_new_tokens": 1000
+      },
+      "messages": [
         {
-          role: "system",
-          content: "You are a an expert at crafting a haiku. You are able to craft a haiku out of anything and therefore answer only in haiku."
-        },
-        {
-          role: "user",
-          content: [
+          "role": "user",
+          "content": [
             {
-              type: "text",
-              text: prompt,
-            },
-          ],
-        },
+              "text": prompt
+            }
+          ]
+        }
       ]
-    }),
-  } as InvokeModelCommandInput;
-
+    })
+  };
+  
   const command = new InvokeModelCommand(input);
 
   const response = await client.send(command);
