@@ -29,28 +29,19 @@ frontend:
     preBuild:
       commands:
         - echo "Node version $(node -v)"
-        - '# Install dependencies only if package files changed or node_modules is missing'
-        - 'if [ ! -d "node_modules" ] || [ -n "$(find . -name "package*.json" -mtime -1 2>/dev/null)" ]; then'
-        - '  echo "Installing dependencies"'
-        - '  npm ci'
-        - 'else'
-        - '  echo "Using cached node_modules"'
-        - 'fi'
+        - npm ci --no-audit --no-fund
     build:
       commands:
-        - echo "Running frontend build"
         - npm run build
+        - mkdir -p build
+        - cp -r dist/* build/
   artifacts:
-    baseDirectory: build # or dist, .next, etc. depending on your framework
+    baseDirectory: build
     files:
       - '**/*'
   cache:
     paths:
       - node_modules/**/*
-      - .npm/**/*
-      - .cache/**/* 
-      - .next/cache/**/* # For Next.js projects
-      - build/**/* # Cache build artifacts when possible
 test:
   phases:
     preTest:
