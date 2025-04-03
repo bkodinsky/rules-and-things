@@ -47,3 +47,8 @@ test:
     test:
       commands:
         - echo "No tests run by default"
+  artifacts:
+    baseDirectory: .
+    files:
+      - '**/*.log'
+      - 'test-report.xml'
