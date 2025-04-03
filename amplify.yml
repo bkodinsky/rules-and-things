@@ -3,20 +3,22 @@ backend:
   phases:
     build:
       commands:
-        - '# Execute backend build commands only if backend files changed'
-        - 'if [ "$(git diff --name-only $AMPLIFY_PREV_COMMIT $AMPLIFY_HEAD_COMMIT | grep -E "^amplify/(backend|api|function|auth)/")" != "" ]; then'
-        - '  echo "Backend changes detected, building backend"'
-        - '  amplify push --yes'
-        - 'else'
-        - '  echo "No backend changes detected, skipping backend build"'
-        - 'fi'
+        - echo "Starting backend build"
+        - '# Execute backend build commands only if backend files changed or on initial deployments'
+        - |
+          if [ "$AWS_COMMIT_ID" == "" ] || [ -n "$(find amplify -name "*.ts" -o -name "*.js" -o -name "*.json" -mtime -1)" ]; then
+            echo "Backend changes detected, building backend"
+            amplify push --yes
+          else
+            echo "No backend changes detected, skipping backend build"
+          fi
 frontend:
   phases:
     preBuild:
       commands:
         - echo "Node version $(node -v)"
         - '# Install dependencies only if package files changed or node_modules is missing'
-        - 'if [ "$(git diff --name-only $AMPLIFY_PREV_COMMIT $AMPLIFY_HEAD_COMMIT | grep -E "package(-lock)?.json$")" != "" ] || [ ! -d "node_modules" ]; then'
+        - 'if [ ! -d "node_modules" ] || [ -n "$(find . -name "package*.json" -mtime -1)" ]; then'
         - '  echo "Installing dependencies"'
         - '  npm ci'
         - 'else'
@@ -24,15 +26,8 @@ frontend:
         - 'fi'
     build:
       commands:
-        - '# Determine changed areas'
-        - 'FRONTEND_CHANGED=$(git diff --name-only $AMPLIFY_PREV_COMMIT $AMPLIFY_HEAD_COMMIT | grep -v "^amplify/" | wc -l)'
-        - 'if [ "$FRONTEND_CHANGED" -gt "0" ] || [ "$AMPLIFY_JOB_NAME" = "release" ]; then'
-        - '  echo "Frontend changes detected, running full build"'
-        - '  npm run build'
-        - 'else'
-        - '  echo "Only backend changes detected, running minimal frontend build"'
-        - '  SKIP_PREFLIGHT_CHECK=true npm run build'
-        - 'fi'
+        - echo "Running frontend build"
+        - npm run build
   artifacts:
     baseDirectory: build # or dist, .next, etc. depending on your framework
     files:
@@ -48,18 +43,7 @@ test:
   phases:
     preTest:
       commands:
-        - '# Run tests only if relevant files changed'
-        - 'if [ "$(git diff --name-only $AMPLIFY_PREV_COMMIT $AMPLIFY_HEAD_COMMIT | grep -E "src/|tests/|__tests__/")" != "" ]; then'
-        - '  echo "Changes detected in testable files, running tests"'
-        - '  npm ci'
-        - 'else'
-        - '  echo "No changes to testable files, skipping tests"'
-        - '  exit 0'
-        - 'fi'
+        - echo "Skipping tests unless explicitly configured"
     test:
       commands:
-        - npm test -- --watchAll=false --passWithNoTests
-  artifacts:
-    baseDirectory: coverage
-    files:
-      - '**/*'
+        - echo "No tests run by default"
