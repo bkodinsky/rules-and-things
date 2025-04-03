@@ -21,6 +21,8 @@ backend:
             fi
           else
             echo "No Amplify backend project detected, skipping backend build"
+            echo "Creating default amplify_outputs.json file"
+            echo "{}" > amplify_outputs.json
           fi
 frontend:
   phases:
