@@ -21,9 +21,11 @@ export const handler: Schema["generateHaiku"]["functionHandler"] = async (
     contentType: "application/json",
     accept: "application/json",
     body: JSON.stringify({
-      system:
-        "You are a an expert at crafting a haiku. You are able to craft a haiku out of anything and therefore answer only in haiku.",
       messages: [
+        {
+          role: "system",
+          content: "You are a an expert at crafting a haiku. You are able to craft a haiku out of anything and therefore answer only in haiku."
+        },
         {
           role: "user",
           content: [
