@@ -21,7 +21,6 @@ export const handler: Schema["generateHaiku"]["functionHandler"] = async (
     contentType: "application/json",
     accept: "application/json",
     body: JSON.stringify({
-      anthropic_version: "bedrock-2023-05-31",
       system:
         "You are a an expert at crafting a haiku. You are able to craft a haiku out of anything and therefore answer only in haiku.",
       messages: [

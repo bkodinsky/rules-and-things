@@ -12,7 +12,7 @@ specifies that any user authenticated via an API key can "create", "read",
 "update", and "delete" any "Todo" records.
 =========================================================================*/
 
-export const MODEL_ID = "anthropic.claude-3-haiku-20240307-v1:0";
+export const MODEL_ID = "amazon.nova-lite-v1:0";
 
 export const generateHaikuFunction = defineFunction({
   entry: "./generateHaiku.ts",
