@@ -3,58 +3,18 @@ backend:
   phases:
     build:
       commands:
-        - echo "Starting backend build"
-        - |
-          if [ -d "amplify" ] && [ -f "amplify/.config/project-config.json" ]; then
-            echo "Amplify backend project detected"
-            amplify status
-            if [ $? -eq 0 ]; then
-              echo "Amplify project is valid, checking for changes"
-              if [ "$AWS_COMMIT_ID" == "" ] || [ -n "$(find amplify -name "*.ts" -o -name "*.js" -o -name "*.json" -mtime -1 2>/dev/null)" ]; then
-                echo "Backend changes detected, building backend"
-                amplify push --yes
-              else
-                echo "No backend changes detected, skipping backend build"
-              fi
-            else
-              echo "Amplify project exists but is not initialized properly, skipping backend build"
-            fi
-          else
-            echo "No Amplify backend project detected, skipping backend build"
-            echo "Creating default amplify_outputs.json file"
-            echo "{}" > amplify_outputs.json
-          fi
+        - npm ci --cache .npm --prefer-offline
+        - npx ampx pipeline-deploy --branch $AWS_BRANCH --app-id $AWS_APP_ID
 frontend:
   phases:
-    preBuild:
-      commands:
-        - echo "Node version $(node -v)"
-        - npm ci --no-audit --no-fund
     build:
       commands:
         - npm run build
-        - mkdir -p build
-        - cp -r dist/* build/
   artifacts:
-    baseDirectory: build
+    baseDirectory: dist
     files:
       - '**/*'
   cache:
     paths:
+      - .npm/**/*
       - node_modules/**/*
-test:
-  phases:
-    preTest:
-      commands:
-        - echo "Skipping tests"
-    test:
-      commands:
-        - echo "No tests configured"
-  artifacts:
-    baseDirectory: .
-    configFilePath: ./dummy-test-report.xml
-    files:
-      - dummy-test-report.xml
-    postBuild:
-      commands:
-        - echo '<testsuites><testsuite tests="0" failures="0" time="0"></testsuite></testsuites>' > dummy-test-report.xml
